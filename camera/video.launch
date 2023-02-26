@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+   <!-- launch video stream -->
+   <include file="$(find video_stream_opencv)/launch/camera.launch" >
+        <!-- full path to the video file -->
+        <arg name="video_stream_provider" value="/video/f4.mp4" />
+        <!-- set buffer queue size of frame capturing to -->
+        <!-- <arg name="buffer_queue_size" value="1000" /> -->
+        <!-- throttling the querying of frames to -->
+        <arg name="fps" value="30" />
+        <!-- enable looping playback -->
+        <arg name="loop_videofile" value="true" />
+   </include>
+</launch>

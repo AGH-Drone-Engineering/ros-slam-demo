@@ -1,0 +1,55 @@
+version: '3'
+services:
+
+  roscore:
+    image: ros:melodic-ros-core
+    restart: always
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+    command: roscore
+
+  rviz:
+    build: rviz
+    restart: always
+    depends_on:
+      - roscore
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+    ports:
+      - "5900:5900"
+
+  tf-pub-map:
+    image: ros:melodic-robot
+    restart: always
+    depends_on:
+      - roscore
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+    command: rosrun tf2_ros static_transform_publisher 0 0 0 0 -1.57 0 map map_view
+
+  tf-pub-camera:
+    image: ros:melodic-robot
+    restart: always
+    depends_on:
+      - roscore
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+    command: rosrun tf2_ros static_transform_publisher 0 0 0 0 -1.57 0 base_link base_link_view
+
+  slam:
+    build: orb_slam2
+    restart: always
+    depends_on:
+      - roscore
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+
+  camera:
+    build: camera
+    restart: always
+    depends_on:
+      - roscore
+    environment:
+      - ROS_MASTER_URI=http://roscore:11311
+    volumes:
+      - ./video:/video:ro
